@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CalculadoraCompletaJZ.MainPage"
+             BackgroundColor="Black">
+
+    <Grid RowDefinitions="*,Auto">
+        
+        <VerticalStackLayout Grid.Row="0" VerticalOptions="End" HorizontalOptions="End" Spacing="0">
+            <Label x:Name="lblResultado"
+                   Text="0"
+                   FontSize="80"
+                   FontAttributes="Bold"
+                   HorizontalOptions="End"
+                   TextColor="White"
+                   Margin="0,0,20,0"/>
+        </VerticalStackLayout>
+
+        <!-- Teclado -->
+        <Grid Grid.Row="1" Padding="10" RowSpacing="12" ColumnSpacing="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            
+            <Button Text="AC" Grid.Row="0" Grid.Column="0" Clicked="AC_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="LightGray" TextColor="Black"/>
+            <Button Text="⌫" Grid.Row="0" Grid.Column="1" Clicked="Borrar_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="LightGray" TextColor="Black"/>
+            <Button Text="%" Grid.Row="0" Grid.Column="2" Clicked="Modulo_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="LightGray" TextColor="Black"/>
+            <Button Text="÷" Grid.Row="0" Grid.Column="3" Clicked="Operador_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="Orange" TextColor="White"/>
+
+            
+            <Button Text="7" Grid.Row="1" Grid.Column="0" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="8" Grid.Row="1" Grid.Column="1" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="9" Grid.Row="1" Grid.Column="2" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="×" Grid.Row="1" Grid.Column="3" Clicked="Operador_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="Orange" TextColor="White"/>
+
+            
+            <Button Text="4" Grid.Row="2" Grid.Column="0" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="5" Grid.Row="2" Grid.Column="1" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="6" Grid.Row="2" Grid.Column="2" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="-" Grid.Row="2" Grid.Column="3" Clicked="Operador_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="Orange" TextColor="White"/>
+
+            
+            <Button Text="1" Grid.Row="3" Grid.Column="0" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="2" Grid.Row="3" Grid.Column="1" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="3" Grid.Row="3" Grid.Column="2" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="+" Grid.Row="3" Grid.Column="3" Clicked="Operador_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="Orange" TextColor="White"/>
+
+           
+            <Button Text="0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Clicked="Numero_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"
+                    HorizontalOptions="FillAndExpand"/>
+            <Button Text="." Grid.Row="4" Grid.Column="2" Clicked="Punto_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="DarkGray" TextColor="White"/>
+            <Button Text="=" Grid.Row="4" Grid.Column="3" Clicked="Igual_Clicked" 
+                    CornerRadius="40" FontSize="28" BackgroundColor="Orange" TextColor="White"/>
+        </Grid>
+    </Grid>
+</ContentPage>
