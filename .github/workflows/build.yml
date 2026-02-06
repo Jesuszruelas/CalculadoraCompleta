@@ -16,7 +16,7 @@ jobs:
           java-version: 17
           distribution: 'zulu'
       
-      # PASO NUEVO VITAL: Configurar .NET 8 explícitamente
+      # Configuramos .NET 8 (Importante para compatibilidad)
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -26,7 +26,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      # PASO NUEVO VITAL: Instalar herramientas de Android ANTES de escanear
+      # Instalamos SOLO Android (Ya no nos preocupamos por iOS)
       - name: Install Android Workload
         run: dotnet workload install android
 
@@ -60,7 +60,7 @@ jobs:
           # 1. Iniciar Scanner
           ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"Jesuszruelas_CalculadoraCompleta" /o:"jesuszruelas" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           
-          # 2. Buscar el archivo del proyecto automáticamente
+          # 2. Buscar el archivo del proyecto
           $projectFile = Get-ChildItem -Path . -Recurse -Filter *.csproj | Select-Object -First 1
           
           if (-not $projectFile) { 
@@ -70,8 +70,9 @@ jobs:
           
           Write-Host "--> Proyecto encontrado: $($projectFile.FullName)"
 
-          # 3. Compilar (Ahora sí funcionará porque instalamos Android arriba)
-          dotnet build $projectFile.FullName
+          # 3. Compilar SOLO PARA ANDROID
+          # Agregamos '-f net8.0-android' para ignorar iOS y evitar el error
+          dotnet build $projectFile.FullName -f net8.0-android --no-incremental
           
           # 4. Finalizar Scanner
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
