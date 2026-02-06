@@ -15,15 +15,28 @@ jobs:
         with:
           java-version: 17
           distribution: 'zulu'
+      
+      # PASO NUEVO VITAL: Configurar .NET 8 explícitamente
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Importante para el análisis histórico
+          fetch-depth: 0
+
+      # PASO NUEVO VITAL: Instalar herramientas de Android ANTES de escanear
+      - name: Install Android Workload
+        run: dotnet workload install android
+
       - name: Cache SonarQube Cloud packages
         uses: actions/cache@v4
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+
       - name: Cache SonarQube Cloud scanner
         id: cache-sonar-scanner
         uses: actions/cache@v4
@@ -31,21 +44,34 @@ jobs:
           path: ${{ runner.temp }}\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
+
       - name: Install SonarQube Cloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
+
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
+          # 1. Iniciar Scanner
           ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"Jesuszruelas_CalculadoraCompleta" /o:"jesuszruelas" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           
-          # CAMBIO IMPORTANTE: Apuntamos directo al .csproj para evitar el error del .sln
-          # Si vuelve a fallar, verifica que la carpeta se llame exactamente "CalculadoraCompletaJZ"
-          dotnet build "CalculadoraCompletaJZ\CalculadoraCompletaJZ.csproj"
+          # 2. Buscar el archivo del proyecto automáticamente
+          $projectFile = Get-ChildItem -Path . -Recurse -Filter *.csproj | Select-Object -First 1
           
+          if (-not $projectFile) { 
+              Write-Error "¡ERROR CRÍTICO! No se encontró ningún archivo .csproj en el repositorio."
+              exit 1 
+          }
+          
+          Write-Host "--> Proyecto encontrado: $($projectFile.FullName)"
+
+          # 3. Compilar (Ahora sí funcionará porque instalamos Android arriba)
+          dotnet build $projectFile.FullName
+          
+          # 4. Finalizar Scanner
           ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
